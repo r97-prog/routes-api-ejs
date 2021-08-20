@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Registartion </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Registartion form </h1>
+    <form id="myForm">
+      <label for="name">FullName:</label><br>
+      <input type="text" name="fullName" value="" id="fullName">
+      <span id="validName" class=""></span><br><br>
+     
+      <label for="email">Email:</label><br>
+      <input type="text"  name="email" value="" id="email">
+      <br><br>
+      <span id="validEmail" class=""></span><br>
+
+      <label for="password">Password</label><br>
+      <input type="password"  name="password" value="" id="password">
+      <br><br>
+      <span id="validpassword" class=""></span><br>
+         
+      <label for="confirmPass">confirmPass</label><br>
+      <input type="password"  name="confirmPass" value="" id="confirmPass">
+      <br><br>
+      <span id="confirmvalidPassword" class=""></span><br>
+      
+      <button type="button"onclick="loadDoc()">Register</button>
+      <a class="nav-link active" aria-current="page"href="/">Login</a>
+
+      <script>
+function validation(){
+  var fullName = document.getElementById('fullName').value;
+  var email = document.getElementById('email').value;
+  var password = document.getElementById('password').value;
+  var confirmPass = document.getElementById('confirmPass').value;
+  var mailformateer = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+  if(fullName == ""){
+document.getElementById('validName').innerHTML = "Please fill data properly"
+return false;
+  } else if(email ==""){
+    document.getElementById('validName').innerHTML = ""
+    document.getElementById('validEmail').innerHTML="Please fill email"
+    return false;
+  }else if(!mailformateer.test(email)){
+    document.getElementById('validEmail').innerHTML = "Please fill correct email"
+    return false;
+  }else if (password == ""){
+    document.getElementById('validEmail').innerHTML = ""
+    document.getElementById("validpassword").innerHTML = "Please fill password"
+    return false;
+  } else if(password.length<6){
+    document.getElementById("validpassword").innerHTML = "password must be at least six digit"
+    return false;
+  }else if(confirmPass==""){
+    document.getElementById('validpassword').innerHTML =""
+    document.getElementById("confirmvalidPassword").innerHTML ="please fill confirm password"
+    return false;
+  }else if(password!==confirmPass){
+    document.getElementById("confirmvalidPassword").innerHTML = "password and confirm password must be same"
+    return false;
+  }else{
+    document.getElementById('confirmvalidPassword').innerHTML=""
+    return true;
+  }
+
+}
+
+function loadDoc(){
+
+  var params = {
+    'fullName':fullName.value,
+    'email':email.value,
+    'password':password.value,
+    'confirmPass':confirmPass.value
+  }
+
+  if(validation() === true ) {
+          const  xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function(){
+            if(this.readyState===4 && this.status === 200) {
+              let response = JSON.parse(this.response);
+              if(response.status === true) {
+                console.log("if");
+                 window.location.pathname="/"
+              }else {
+                console.log("error :",response);
+              }
+            }
+          };
+          xhttp.open("POST","/registration",true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(`${JSON.stringify(params)}`)
+        } else {
+          validation();
+        }
+};
+
+
+      </script>
+ 
+  </body>
+</html>

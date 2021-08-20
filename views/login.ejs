@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+</head>
+<body>
+    <form id="myForm">
+        <h2><i>Login Form</i></h2>
+          <label for="name">Email:</label><br>
+          <input type="text"  name="email" value=""id="email"><br><br>
+          <span id="emailError" class="text-danger font-weight bold"></span><br><br>
+    
+          <label for="passsword">Password:</label><br>
+          <input type="password"  name="password" value=""id="password"><br><br>
+          <span id="passError" class="text-danger font-weight bold"></span><br><br>
+    
+          <button type="button" onclick="docload()">Login</button>
+            <a class="nav-link active" aria-current="page"href="/registration">Register</a>
+          <br><br>
+<script>
+
+function validation(){
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    if(email == ""){
+        document.getElementById("emailError").innerHTML="Please fill email field"
+        return false;
+    }else if(!emailformat.test(email)){
+        document.getElementById("emailError").innerHTML="please check mail"
+        return false;
+    }else if(password == ""){
+        document.getElementById("emailError").innerHTML=""
+        document.getElementById("passError").innerHTML="please fill password"
+        return false;
+    }else{
+        document.getElementById("passError").innerHTML=""
+        return true;
+    }
+}
+function docload(){
+     var params = {
+    'email':email.value,
+    'password':password.value,
+        }
+        if(validation() === true) {
+            const  xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function(){
+            if(this.readyState===4 && this.status === 200) {
+              let response = JSON.parse(this.response);
+              console.log(response)
+              if(response.status === true) {
+                 window.location.pathname="/users"
+              }else {
+                console.log("error :",response);
+              }
+            }
+          };
+          xhttp.open("POST","/login",true);
+          xhttp.setRequestHeader("Content-type", "application/json");
+          xhttp.send(`${JSON.stringify(params)}`)
+        } else {
+          validation();
+        }
+      };
+
+
+</script>
+
+
+</body>
+</html>
