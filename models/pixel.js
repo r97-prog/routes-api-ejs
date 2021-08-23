@@ -1,11 +1,8 @@
 var mongoose = require("mongoose");
 
 const pixelschema = new mongoose.Schema({
-    _id:mongoose.Schema.Types.ObjectId,
+
     fullName:{
-        type:String,
-    },
-    lastName:{
         type:String,
     },
     email:{

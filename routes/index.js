@@ -13,16 +13,25 @@ router.get('/registration',(req,res)=>{
   res.render('index')
 });
 
-router.get('/users',(req,res)=>{
-  res.render('users')
+router.get('/users',async(req,res)=>{
+  await pixelschema.find(function(err,pixelschema){
+    if(err){
+      console.log(err);
+    }else{
+      console.log(pixelschema);
+      res.render('users',{'pixelschema':pixelschema});
+    }
+  });
 });
 
 router.get('/addpage',(req,res)=>{
   res.render('addpage')
 });
 
-router.get('/editpage',(req,res)=>{
-  res.render('editpage')
+router.get('/editpage/:id',(req,res)=>{
+  console.log(req);
+  res.send('send');
+  res.render('editpage',{FullName:'',})
 });
 
 
@@ -74,6 +83,30 @@ router.post("/login",async(req,res)=>{
   }
   });
 
+  // call add form method
+  router.get('/addpage',(req,res,next)=>{
+    console.log(req.body);
+  })
+
+  // Add form processing using Post Method
+      router.post('/addpage',(req,res)=>{
+        console.log(req.body);
+        const mybodydata ={
+              fullName:req.body.fullName,
+              email:req.body.email,
+              password:req.body.password,
+              confirmPass:req.body.confirmPass
+        }
+        var data = pixelschema(mybodydata);
+        data.save(function(err){
+          if(err){
+            res.render('addpage',{message:'user registered not succesful'})
+          }else{
+            res.render('addpage',{message:'user registered successfully'})
+          }
+        })
+      });
+
 // post route
 // router.post("/addpage",async(req,res)=>{
 //   try {
@@ -101,7 +134,6 @@ router.post("/login",async(req,res)=>{
 //     res.status(401).send(error);
 //   }
 // });
-
 
 // edit or update 
 router.put("/update/:id",(req,res)=>{
