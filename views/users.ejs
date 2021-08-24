@@ -28,18 +28,14 @@
                   <td><%=pixelschema[i].email%></td>
                   <td>
                     <a href='/editpage?_id=<%= pixelschema[i]._id %>'>Edit</a>
-                    <a href='/addpage'>Delete</a>
+                    <a href='/addpage'>add</a>
+                    <a href='/delete?_id=/<%= pixelschema[i]._id %>'>Delete</a>
                     <!-- <a href='//<%= pixelschema[i]._id %>'>Delete</a> -->
                   </td>
                 </tr>
                 <% } %>
               </tbody>
             </thead>
-            </table>
-            <% if(editpage/{_id}){ %>
-              res.render('editpage')
-              <% } else { %>
-              res.render('addpage')
-              <% } %>
+          </table>       
 </body>
 </html>

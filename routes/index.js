@@ -28,10 +28,8 @@ router.get('/addpage',(req,res)=>{
   res.render('addpage')
 });
 
-router.get('/editpage/:id',(req,res)=>{
-  console.log(req);
-  res.send('send');
-  res.render('editpage',{FullName:'',})
+router.get('/editpage',(req,res)=>{
+  res.render('editpage')
 });
 
 
@@ -107,62 +105,71 @@ router.post("/login",async(req,res)=>{
         })
       });
 
-// post route
-// router.post("/addpage",async(req,res)=>{
-//   try {
-//     // console.log(req.body)
-//     // return
-//     var email = req.body.email;
-//     var emailCheck = await pixelschema.findOne({email:email});
-//     console.log(emailCheck)
-//     if(emailCheck){
-//       res.status(401).json({status:false,"message":"Email already Exists"});
-//     }else{
-//       console.log(req.body)
-//       let post = {
-//         fullName:req.body.fullName,
-//         lastName:req.body.lastName,
+
+// edit or update 
+// router.put("/update/:id",(req,res)=>{
+// // console.log(req.params.id);
+// console.log(req.body);
+// pixel.findByIdAndUpdate({_id:req.params.id},{
+//   $set:{
+//        fullName:req.body.fullName,
 //         email:req.body.email,
 //         password:req.body.password,
 //         confirmPass:req.body.confirmPass
-//       }
-//       let register = await pixelschema.create(post);
-//       res.status(200).json({status:true,'result':register})
-//     } 
-//   } catch (error) {
-//     console.log(error);
-//     res.status(401).send(error);
 //   }
-// });
+// }).then(result =>{
+//   res.status(200).json({
+//     updated_adduser:result
+//   })
+// }).catch(error =>{
+//   console.log('error');
+//   res.status(500).json({
+//     error:(error)
+//   })
+// })
 
-// edit or update 
-router.put("/update/:id",(req,res)=>{
-// console.log(req.params.id);
-console.log(req.body);
-pixel.findByIdAndUpdate({_id:req.params.id},{
-  $set:{
-       fullName:req.body.fullName,
+// });
+// get single user for edit record
+router.get('/edit/:id',(req,res)=>{
+  console.log(req.params.id);
+
+  pixelschema.findById(req.params.id,function(err,pixelschema){
+    if(err){
+      console.log(err);
+    }else{
+      console.log(pixelschema);
+      res.render('users',{pixelschema:pixelschema});
+    }
+  });
+});
+
+
+// update record using POST Method
+router.post('/edit/:id',(req,res)=>{
+  console.log("Myid is" + req.params.id);
+ 
+  const mybodydata = {
+        fullName:req.body.fullName,
         email:req.body.email,
         password:req.body.password,
         confirmPass:req.body.confirmPass
   }
-}).then(result =>{
-  res.status(200).json({
-    updated_adduser:result
-  })
-}).catch(error =>{
-  console.log('error');
-  res.status(500).json({
-    error:(error)
-  })
-})
-
+  console.log(mybodydata)
+  
+  pixelschema.findByIdAndUpdate(req.params.id,mybodydata,function(err){
+    if(err){
+      res.redirect('editpage'+ req.params.id);
+    }else{
+      res.redirect('users')
+      console.log(users)
+    }
+  });
 });
 
 
 // Delete id
 
-router.delete('remove/:id',(req,res,next)=>{
+router.delete('delete/:id',(req,res,next)=>{
   console.log(req.params.id);
   pixel.remove({_id:req.params.id})
   .then(result =>{

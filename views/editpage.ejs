@@ -33,9 +33,9 @@
     </form> -->
 
   <h1><i>Edit user</i></h1> 
-    <form action="/update/:id"method="PUT">
-        <label for="name">FullName:</label><br>
-        <input type="text" name="fullName" value="<%= FullName %>" id="fullName">
+      <form action="/edit/:id" method="POST">
+        <label for="name">fullName:</label><br>
+        <input type="text" name="fullName" value="" id="fullName">
         <span id="validName" class=""></span><br><br>
     
         <!-- <label for="name">lastName:</label><br>
@@ -43,7 +43,7 @@
         <span id="lvalidName" class=""></span><br><br> -->
        
         <label for="email">Email:</label><br>
-        <input type="text"  name="email" value="<%=email%>" id="email">
+        <input type="text"  name="email" value="" id="email">
         <br><br>
         <span id="validEmail" class=""></span><br>
     
