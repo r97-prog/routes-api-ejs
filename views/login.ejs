@@ -49,20 +49,20 @@ function docload(){
         }
         if(validation() === true) {
             const  xhttp = new XMLHttpRequest();
-          xhttp.onreadystatechange = function(){
-            if(this.readyState===4 && this.status === 200) {
-              let response = JSON.parse(this.response);
-              console.log(response)
-              if(response.status === true) {
-                 window.location.pathname="/users"
-              }else {
-                console.log("error :",response);
+            xhttp.onreadystatechange = function(){
+              if(this.readyState===4 && this.status === 200) {
+                let response = JSON.parse(this.response);
+                console.log(response)
+                if(response.status === true) {
+                  window.location.pathname="/users"
+                }else {
+                  console.log("error :",response);
+                }
               }
-            }
-          };
-          xhttp.open("POST","/login",true);
-          xhttp.setRequestHeader("Content-type", "application/json");
-          xhttp.send(`${JSON.stringify(params)}`)
+            };
+            xhttp.open("POST","/login",true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send(`${JSON.stringify(params)}`)
         } else {
           validation();
         }
