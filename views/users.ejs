@@ -12,6 +12,9 @@
  <body> 
    
             <table class="table table-bordered">
+              <!-- <button class = "button button1">Add user</button> -->
+              <!-- <button href='/addpage/<%= pixelschema._id %>'>Adduser</button> -->
+              <a href='/adduser'>Add user</a>
               <thead>
                 <tr>
                   <th scope="col">S.no</th>
@@ -28,14 +31,15 @@
                   <td><%=pixelschema[i].email%></td>
                   <td>
                     <a href='/editpage/<%= pixelschema[i]._id %>'>Edit</a>
-                    <a href='/addpage'>add</a>
+                    <!-- <a href='/addpage'>add</a> -->
                     <a href='/delete/<%= pixelschema[i]._id %>'>Delete</a>
-                    <!-- <a href='//<%= pixelschema[i]._id %>'>Delete</a> -->
                   </td>
                 </tr>
                 <% } %>
+
               </tbody>
             </thead>
+          
           </table>       
 </body>
 </html>
