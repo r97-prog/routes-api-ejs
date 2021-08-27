@@ -4,20 +4,20 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Addpage</title>
+  <title>editpage</title>
 </head>
 <body>
   <h1><i>
        Edit User
     </i></h1>
  
-  <form action="/addpage"  method="POST">
+  <form method="POST">
     <label for="name">FullName:</label><br>
     <input type="text" name="fullName" value="<% if(pixelschema){ %><%= pixelschema.fullName %><%}%>" id="fullName">
     <span id="validName" class=""></span><br><br>
 
     <label for="email">Email:</label><br>
-    <input type="text"  name="email" value="<%if(pixelschema){ %><%= pixelschema.email %><%}%>" id="email">
+    <input type="text"  name="email" value="<%if(pixelschema){ %><%= pixelschema.email %><%}%>" id="email" readonly>
     <br><br>
     <span id="validEmail" class=""></span><br>
 
@@ -71,20 +71,19 @@ function saveUserData() {
     }
     let button = document.getElementsByTagName("button");
     let _id = button[0].getAttribute("user-id")
-    
     const  xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function(){
         if(this.readyState===4 && this.status === 200) {
           let response = JSON.parse(this.response);
           console.log(response)
-          // if(response.status === true) {
-          //   window.location.pathname="/users"
-          // }else {
-          //   console.log("error :",response);
-          // }
+          if(response.status === true) {
+            window.location.pathname="/users"
+          }else {
+            console.log("error :",response);
+          }
         }
       };
-      xhttp.open("POST","/edit/"+_id,true);
+      xhttp.open("POST","/editpage/"+_id,true);
       xhttp.setRequestHeader("Content-type", "application/json");
       xhttp.send(`${JSON.stringify(params)}`)
   } else {

@@ -14,7 +14,12 @@
             <table class="table table-bordered">
               <!-- <button class = "button button1">Add user</button> -->
               <!-- <button href='/addpage/<%= pixelschema._id %>'>Adduser</button> -->
-              <a href='/adduser'>Add user</a>
+              <div>
+                <ul>
+             <li> <a href='/adduser'>Add user</a></li>
+             <li> <a href='/Home'>Home</a></li>
+            </ul>
+            </div>
               <thead>
                 <tr>
                   <th scope="col">S.no</th>
@@ -25,21 +30,46 @@
                 <tbody>
                 <% for(let i=0;i<pixelschema.length;i++){%>
                 <tr>
-                  <th scope="row"></th>
-                  <!-- <!-- <td><%=i %></td> -- -->
+                  <!-- <th scope="row"></th> -->
+                   <td><%=i %></td>
                   <td><%=pixelschema[i].fullName %></td>
                   <td><%=pixelschema[i].email%></td>
                   <td>
                     <a href='/editpage/<%= pixelschema[i]._id %>'>Edit</a>
                     <!-- <a href='/addpage'>add</a> -->
-                    <a href='/delete/<%= pixelschema[i]._id %>'>Delete</a>
+                    <!-- <a href='/delete/<%= pixelschema[i]._id %>'>Delete</a> -->
+                    <button type="button" onclick="deleteUser(`<%= pixelschema[i]._id %>`)">Delete</a>
+                    
                   </td>
                 </tr>
                 <% } %>
-
               </tbody>
             </thead>
-          
           </table>       
+          <script>
+            function deleteUser(id) {
+              if (confirm("Are you sure?") == true) {
+                  const xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = function(){
+                      if(this.readyState===4 && this.status === 200) {
+                        let response = JSON.parse(this.response);
+                        console.log(response)
+                        if(response.status === true) {
+                          window.location.pathname="/users"
+                        }else {
+                          console.log("error :",response);
+                        }
+                      }
+                    };
+                    xhttp.open("DELETE","/delete/"+id,true);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send();
+              } else {
+                  x = "You pressed Cancel!";
+                  console.log(x);
+              }
+          }
+
+          </script>
 </body>
 </html>
