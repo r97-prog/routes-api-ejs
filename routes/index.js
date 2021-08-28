@@ -3,6 +3,8 @@ const pixel = require('../models/pixel');
 var router = express.Router();
 var pixelschema = require('../models/pixel')
 const crypto = require('crypto');
+const multer = require('multer');
+var path = require('path');
 
 
 /* GET home page. */
@@ -13,6 +15,31 @@ router.get('/Home',(req,res)=>{
   res.render('index');
 });
 
+router.get('/image',(req,res)=>{
+  res.render('profile')
+});
+
+// set storage Engine
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/uploads')
+  },
+  filename: function (req, file, cb) {
+    console.log(file)
+    cb(null,file.fieldname+'-'+Math.round(Math.random()*1E9)+path.extname(file.originalname))
+  }
+});
+
+const upload = multer({ storage: storage })
+
+// Upload image via post request
+router.post('/image',upload.single('image'), (req, res) => {
+  res.send(req.file)
+}, (error, req, res, next) => {
+  res.status(400).send({ error: error.message })
+});
+
+// login route
 router.post("/login",async(req,res)=>{
   try{
     var email = req.body.email;
@@ -138,6 +165,9 @@ router.delete('/delete/:id',async(req,res)=>{
     })
   })
 });
+
+
+
 
 function encrypt(password){
   const cipher = crypto.createCipher('aes192','a password');
