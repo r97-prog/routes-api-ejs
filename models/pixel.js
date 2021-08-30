@@ -13,7 +13,11 @@ const pixelschema = new mongoose.Schema({
     },
     confirmPass:{
         type:String,
-    }
+    },
+   image:{
+       data:Buffer,
+       contentType:String
+   },
 });
 
 const pixel  = new mongoose.model('pixel',pixelschema);

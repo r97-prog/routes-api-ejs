@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 const crypto = require('crypto');
+const session = require('express-session')
 
 
 var indexRouter = require('./routes/index');
@@ -24,6 +25,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({
   extended:true
+}));
+
+app.use(session({
+  secret:'2C44-4D44-WppQ38S',
+  resave:'true',
+  saveUninitialized:false
 }));
 
 app.use('/', indexRouter);

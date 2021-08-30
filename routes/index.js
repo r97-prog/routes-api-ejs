@@ -11,22 +11,51 @@ var path = require('path');
 router.get('/', function(req, res, next) {
   res.render('login', { title: 'Express' });
 });
+
+// Profile routing Home Page
 router.get('/Home',(req,res)=>{
-  res.render('index');
+  res.render('Home');
 });
 
-router.get('/image',(req,res)=>{
-  res.render('profile')
+// Profile routing get
+// router.get('/image',(req,res)=>{
+//   res.render('profile',{pixelschema:'pixelschema'});
+// });
+
+// get image by id
+router.get('/image',async (req, res) => {
+  await pixelschema.findOne({pixelschema}, (err) => {
+      req.session.id;
+      console.log(req.sessionID);
+      if (err) {
+          console.log(err);
+          res.status(500).send('An error occurred', err);
+      }
+      else {
+          res.render('profile', { pixelschema: 'pixelschema' });
+      }
+  });
 });
 
+// logout routes
+router.get('/logout',(req,res)=>{
+ req.session.destroy((err)=>{
+   if(err){
+     return console.log(err);
+   }
+   res.redirect('/registration');
+ });
+});
+ 
 // set storage Engine
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '/uploads')
+    cb(null, './public/uploads')
   },
   filename: function (req, file, cb) {
-    console.log(file)
-    cb(null,file.fieldname+'-'+Math.round(Math.random()*1E9)+path.extname(file.originalname))
+    let filename = file.originalname.split('.')[0] +'-'+Date.now() + path.extname(file.originalname)
+    console.log("filename : ",filename);
+    cb(null,filename);
   }
 });
 

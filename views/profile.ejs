@@ -4,33 +4,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Document</title>
 </head>
 <body>
-    <form action="/image" method="post" enctype="multipart/form-data">       <label for="fname">First name:</label>
-        <input type="text" id="fname" name="fname"><br><br>
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-
-        <div class="file-field input-field">
-            <div class="btn-grey">
-                <span>File</span>
-                <input name="image" type="file" id="file">
-            </div>
-        <input type="submit" value="Submit">
-      </form>
-<script>
-function validation(){
-var fname = document.getElementById('fname').value;
-var email = document.getElementById('email').value;
-var password = document.getElementById('password').value;
- 
-}
-</script>
-
-</script>
-
+    
 </body>
 </html>
+<form action="/image" method="POST"enctype="multipart/form-data">
+       <label for="name">FullName:</label><br>
+   <input type="text" name="fullName" value="<%if(pixelschema){ %><%= pixelschema.fullName %><%}%>" id="fullName">
+   <span id="validName" class=""></span><br><br>
+
+   <label for="email">Email:</label><br>
+   <input type="text"  name="email" value="<%if(pixelschema){ %><%= pixelschema.email %><%}%>" id="email">
+   <br><br>
+   <span id="validEmail" class=""></span><br>
+
+   <label for="password">Password</label><br>
+   <input type="password"  name="password" value=""
+    id="password">
+<br><br>
+   <span id="validpassword" class=""></span><br>
+       <div class="file-field input-field">
+           <div class="btn-grey">
+               <span>File</span>
+               <input name="image" type="file" id="file">
+           </div>
+       <input type="submit" value="Submit">
+     </form>
