@@ -4,31 +4,95 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Profile</title>
+    
 </head>
 <body>
+    <script>
     
+        </script>
+    <form>
+        <label for="name">FullName:</label><br>
+        <input type="text" name="fullName" value="<%= result.fullName %>" id="fullName">
+        <span id="validName" class=""></span><br><br>
+    
+        <label for="email">Email:</label><br>
+        <input type="text"  name="email" value="<%= result.email %>" id="email" readonly>
+        <br><br>
+        <span id="validEmail" class=""></span><br>
+    
+        <label for="password">Password</label><br>
+        <input type="password"  name="password" value=""
+            id="password">
+        <br><br>
+        <div class="file-field input-field">
+            <div class="btn-grey">
+                <span>File</span>
+                <input name="profile" type="file" id="file">
+                <img src="/uploads/<%= result.profile_image%>" height="200px" width="200px"/>
+            </div>
+            </div>
+        <span id="validpassword" class=""></span><br>
+        <button type="button" onclick="savedUserData()">save</button>
+    </form>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function validationjs(){
+            var password = document.getElementById('password').value
+            var email = document.getElementById('email').value
+            var emailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if(password !== ""){
+                console.log(password);
+                console.log(password.length);
+                if(password.length<6){
+                    document.getElementById('validpassword').innerHTML="password should be atleast 6 digit"
+                    return false;
+                }else{
+                    document.getElementById('validpassword').innerHTML = ""
+                    return true;
+                }
+            }else{
+                document.getElementById('validpassword').innerHTML=""
+                return true;
+            }       
+        }
+        function savedUserData() {
+            if(validationjs() === true){
+                const formData = new FormData();
+                formData.append("profile",file.files[0]);
+                formData.append("fullName",fullName.value);
+                formData.append("password",password.value);
+ 
+                $.ajax({
+                    type: "POST",
+                    url: "/profile",
+                    data: formData,
+                    processData: false,
+                    contentType: false, 
+                    success: function(data)
+                    {
+                        alert(data); // show response from the php script.
+                    }
+                });
+                // const  xhttp = new XMLHttpRequest();
+                // xhttp.onreadystatechange = function(){
+                //     if(this.readyState===4 && this.status === 200) {
+                //     let response = JSON.parse(this.response);
+                //     console.log(response)
+                //     if(response.status === true) {
+                //         window.location.pathname="/"
+                //     }else {
+                //         console.log("error :",response);
+                //     }
+                //     }
+                // };
+                // xhttp.open("POST","/profile",true);
+                // xhttp.setRequestHeader("Content-type", "application/json");
+                // xhttp.send(JSON.stringify(formData))
+            } else {
+                validationjs();
+            }
+        }
+    </script>
 </body>
 </html>
-<form action="/image" method="POST"enctype="multipart/form-data">
-       <label for="name">FullName:</label><br>
-   <input type="text" name="fullName" value="<%if(pixelschema){ %><%= pixelschema.fullName %><%}%>" id="fullName">
-   <span id="validName" class=""></span><br><br>
-
-   <label for="email">Email:</label><br>
-   <input type="text"  name="email" value="<%if(pixelschema){ %><%= pixelschema.email %><%}%>" id="email">
-   <br><br>
-   <span id="validEmail" class=""></span><br>
-
-   <label for="password">Password</label><br>
-   <input type="password"  name="password" value=""
-    id="password">
-<br><br>
-   <span id="validpassword" class=""></span><br>
-       <div class="file-field input-field">
-           <div class="btn-grey">
-               <span>File</span>
-               <input name="image" type="file" id="file">
-           </div>
-       <input type="submit" value="Submit">
-     </form>

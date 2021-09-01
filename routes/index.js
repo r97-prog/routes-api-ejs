@@ -5,6 +5,7 @@ var pixelschema = require('../models/pixel')
 const crypto = require('crypto');
 const multer = require('multer');
 var path = require('path');
+const session = require('express-session');
 
 
 /* GET home page. */
@@ -17,36 +18,16 @@ router.get('/Home',(req,res)=>{
   res.render('Home');
 });
 
-// Profile routing get
-// router.get('/image',(req,res)=>{
-//   res.render('profile',{pixelschema:'pixelschema'});
-// });
-
-// get image by id
-router.get('/image',async (req, res) => {
-  await pixelschema.findOne({pixelschema}, (err) => {
-      req.session.id;
-      console.log(req.sessionID);
-      if (err) {
-          console.log(err);
-          res.status(500).send('An error occurred', err);
-      }
-      else {
-          res.render('profile', { pixelschema: 'pixelschema' });
-      }
-  });
-});
-
 // logout routes
 router.get('/logout',(req,res)=>{
- req.session.destroy((err)=>{
+  req.session.destroy((err)=>{
    if(err){
      return console.log(err);
    }
-   res.redirect('/registration');
+   res.redirect('/');
  });
 });
- 
+
 // set storage Engine
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -61,13 +42,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-// Upload image via post request
-router.post('/image',upload.single('image'), (req, res) => {
-  res.send(req.file)
-}, (error, req, res, next) => {
-  res.status(400).send({ error: error.message })
-});
-
 // login route
 router.post("/login",async(req,res)=>{
   try{
@@ -77,6 +51,7 @@ router.post("/login",async(req,res)=>{
     // console.log(checkEmail)
     if(checkEmail){
       if(password === decrypt(checkEmail.password)){
+        req.session.Id = checkEmail._id;
         res.status(200).json({status:true,'result':"ok"})
       }else{
         res.send ("invalid password")
@@ -86,7 +61,7 @@ router.post("/login",async(req,res)=>{
     }
   }catch(error){
     console.log(error)
-    res.status(400).json({status:false,"message":"invalid credentials"})
+    res.status(401).json({status:false,"message":"invalid credentials"})
   }
 });
 
@@ -195,8 +170,38 @@ router.delete('/delete/:id',async(req,res)=>{
   })
 });
 
+// get image 
+router.get('/profile',async (req, res) => {
+  if(req.session.Id) {
+    await pixelschema.find({_id:req.session.Id}).then((result) => {  
+      res.render('profile',{'result': result[0]});
+    }).catch(err => {
+      res.status(500).send('An error occurred', err);
+    });
+  } else {
+    res.redirect("/"); 
+  }
+});
 
+router.post('/profile',upload.single('profile'),async(req,res)=>{
+  let userdata = {
+    fullName:req.body.fullName,
+  }
 
+  if(req.body.password) {
+    userdata['password'] = req.body.password
+  }
+
+  if(req.file) {
+    userdata['profile_image'] = req.file.filename
+  }
+  await pixelschema.updateOne({_id:req.session.Id},userdata)
+  .then(result => {
+    res.status(200).json({status:true,'result':result})  
+  }).catch(err => {
+    res.status(401).json({status:false,'error':err})  
+  })
+});
 
 function encrypt(password){
   const cipher = crypto.createCipher('aes192','a password');
@@ -209,7 +214,7 @@ function decrypt(password){
   const decipher = crypto.createDecipher('aes192','a password');
   decrypted = decipher.update(password,'hex','utf8');
   decrypted += decipher.final('utf8');
-  console.log("decrypted:",decrypted);
+  // console.log("decrypted:",decrypted);
   return decrypted
 }
 
